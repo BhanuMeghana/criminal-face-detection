@@ -1,0 +1,28 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UseJavaVersion@1
+    inputs:
+      versionSpec: '11'
+      addToPath: true
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'backend/pom.xml'
+      goals: 'clean package'
+      options: '-DskipTests=true'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: 'backend/target'
+      artifactName: 'drop'
+
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: '<your-azure-subscription>'
+      appName: '<your-web-app-name>'
+      package: '$(Build.ArtifactStagingDirectory)/**/*.jar'

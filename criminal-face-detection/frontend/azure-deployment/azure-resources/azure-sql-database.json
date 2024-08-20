@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2021-02-01-preview",
+      "name": "my-sql-server",
+      "location": "West US",
+      "properties": {
+        "administratorLogin": "adminuser",
+        "administratorLoginPassword": "yourpassword"
+      },
+      "resources": [
+        {
+          "type": "databases",
+          "apiVersion": "2021-02-01-preview",
+          "name": "my-database",
+          "location": "West US",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', 'my-sql-server')]"
+          ],
+          "properties": {
+            "collation": "SQL_Latin1_General_CP1_CI_AS",
+            "maxSizeBytes": "1073741824",
+            "edition": "Basic"
+          }
+        }
+      ]
+    }
+  ]
+}
